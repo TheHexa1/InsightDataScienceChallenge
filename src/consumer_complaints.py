@@ -68,7 +68,7 @@ class ConsumerComplaints:
         except ValueError:
             raise ValueError("Incorrect date format provided, it should be YYYY-MM-DD")       
         
-        product = str(row[1]).lower()
+        product = row[1].lower()
         company = str(row[7]).lower()
 
         # if either product or company name is missing then this row won't be processed
