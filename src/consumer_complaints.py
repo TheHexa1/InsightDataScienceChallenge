@@ -102,8 +102,8 @@ class ConsumerComplaints:
         for k,v in self.filtered_content.items():
             product_name = k.split("_")[0]            
             
-            if("," in product_name): # adding "" surrounding the products with ',' in them
-                product_name = '\"' + product_name + '\"'  
+            # if("," in product_name): # adding "" surrounding the products with ',' in them
+                # product_name = '\"' + product_name + '\"'  
                 
             year = k.split("_")[1]
             number_of_complaints = v['# of complaints']
