@@ -2,7 +2,7 @@
 
 # Required imports
 import sys
-import csv
+from utils import *
 from datetime import datetime
 
 class ConsumerComplaints:
@@ -36,16 +36,7 @@ class ConsumerComplaints:
         """
         
         self.input_filepath = input_filepath
-        self.output_filepath = output_filepath
-    
-    def read_from_input_file(self):
-        """ reads input from file row by row excluding the header row """
-        
-        with open(self.input_filepath, "rt", encoding='utf-8') as csvfile:
-            filereader = csv.reader(csvfile)
-            next(filereader) # excluding the header row 
-            for row in filereader:  
-                yield row    # reading file row by row at a time
+        self.output_filepath = output_filepath    
         
     def add_to_filtered_content(self, row):
         """ takes a row as input, filters it and add filtered data to filtered_content
@@ -68,7 +59,7 @@ class ConsumerComplaints:
         except ValueError:
             raise ValueError("Incorrect date format provided, it should be YYYY-MM-DD")       
         
-        product = row[1].lower()
+        product = str(row[1]).lower()
         company = str(row[7]).lower()
 
         # if either product or company name is missing then this row won't be processed
@@ -93,7 +84,7 @@ class ConsumerComplaints:
     def create_filtered_content(self):
         """  creates full filtered_content dictionary """
         
-        for row in self.read_from_input_file():
+        for row in read_from_input_file(self.input_filepath):
             self.add_to_filtered_content(row)
     
     def create_output_list(self):
@@ -103,7 +94,7 @@ class ConsumerComplaints:
             product_name = k.split("_")[0]            
             
             # if("," in product_name): # adding "" surrounding the products with ',' in them
-                # product_name = '\"' + product_name + '\"'  
+            #     product_name = '\"' + product_name + '\"'  
                 
             year = k.split("_")[1]
             number_of_complaints = v['# of complaints']
@@ -116,26 +107,15 @@ class ConsumerComplaints:
             
             self.output_list.append([product_name, year, number_of_complaints, number_of_companies, 
                                 highest_number_of_complaints_in_perc])
-    
-    def sort_output_list(self):
-        """ sorts output_list by product (alphabetically) and year (ascending)  """
-        
-        self.output_list_sorted = sorted(self.output_list, key=lambda x: (x[0], x[1]))
-
-    def write_to_output_file(self):
-        """ writes output_list to output csv file """
-        
-        with open(self.output_filepath, "w", newline="") as f:
-            writerObj = csv.writer(f)
-            writerObj.writerows(self.output_list_sorted)
+            
 
     def generate_output_file(self):
         """ generates required output file by putting all functions together """
 
         self.create_filtered_content()
         self.create_output_list()
-        self.sort_output_list()
-        self.write_to_output_file()
+        self.output_list_sorted = sort_output_list(self.output_list)
+        write_to_output_file(self.output_filepath, self.output_list_sorted)
 
 
 # command line arguments

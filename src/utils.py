@@ -18,7 +18,7 @@ def sort_output_list(output_list):
     
     return sorted(output_list, key=lambda x: (x[0], x[1]))
 
-def write_to_output_file(output_filepath):
+def write_to_output_file(output_filepath, output_list_sorted):
     """ writes output_list to output csv file """
     
     with open(output_filepath, "w", newline="", encoding='utf-8') as f:
